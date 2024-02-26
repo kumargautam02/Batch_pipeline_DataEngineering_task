@@ -16,11 +16,11 @@ def download_required_files(logger):
     x_path_for_male_dataset = '//*[@id="main"]/div/table[2]/tbody/tr[5]/td[4]/ul/li[1]/a'
     download_mail_dataset = driver.find_element(By.XPATH, x_path_for_male_dataset)
     download_mail_dataset.click()
-    driver.implicitly_wait(60)
+    driver.implicitly_wait(120)
     logger.info("Download of Male_Dataset Started")
     x_path_for_female_dataset = '//*[@id="main"]/div/table[2]/tbody/tr[5]/td[3]/ul/li[1]/a'
     download_female_dataset = driver.find_element(By.XPATH, x_path_for_female_dataset)
     download_female_dataset.click()
-    driver.implicitly_wait(60)
+    driver.implicitly_wait(120)
     logger.info("Download of Female_Dataset Started")
     return 
