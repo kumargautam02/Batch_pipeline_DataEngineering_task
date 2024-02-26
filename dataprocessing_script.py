@@ -21,6 +21,7 @@ logger.info('Data_Processing Script started')
 
 spark = SparkSession.builder.getOrCreate()
 
+
 # %%
 def start_ingesting_data(origin, target_directory):
     try:
