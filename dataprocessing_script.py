@@ -6,7 +6,7 @@ import zipfile
 import pyspark
 import logging
 import pandas as pd
-from database_script import my_conn
+from database_script import get_connection
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
@@ -20,11 +20,6 @@ logger = logging.getLogger('Data_Processing')
 logger.info('Data_Processing Script started')
 
 spark = SparkSession.builder.getOrCreate()
-
-# %%
-# logger.info("Running the requirements.txt file")
-# !pip install -r requirements.txt
-# logger.info("requirements.txt runned successfully")
 
 # %%
 def start_ingesting_data(origin, target_directory):
@@ -42,34 +37,41 @@ def start_ingesting_data(origin, target_directory):
             if ("odis_female_json.zip" in file_in_origin) and ("odis_male_json.zip" in file_in_origin):
                 logger.info("waiting for file to get downloaded")
                 break
-        if ('LANDING' in os.listdir(f'{target_directory}')) and ('DOWNLOAD_PATH' in os.listdir(f'{target_directory}')):
+        if ('LANDING' in os.listdir(f'{target_directory}')) and ('DOWNLOAD_PATH' in os.listdir(f'{target_directory}')) and ('DATABASE' in os.listdir(f'{target_directory}')):
             logger.info("LANDING PATH IS THERE")
             logger.info("DOWNLOAD PATH IS THERE")
+            logger.info("DATABASE PATH IS THERE")
         else :
             os.makedirs(f'{target_directory}LANDING')
             logger.info("LANDING path created successfully")
             os.makedirs(f'{target_directory}DOWNLOAD_PATH')
             logger.info("DOWNLOAD_PATH created created successfully")
+            os.makedirs(f'{target_directory}DATABASE')
+            logger.info("DATABASE created created successfully")
 
         files_in_target_directory = os.listdir(target_directory+'DOWNLOAD_PATH')
         needed_files = ['odis_female_json.zip', "odis_male_json.zip"]
-        for file in files_in_target_directory:
-            if (file.__contains__("odis_female_json") or file.__contains__("odis_male_json")) and (('odis_female_json.json' not in files_in_target_directory) and ('odis_male_json.json' not in files_in_target_directory)):
+        file_in_origin = os.listdir(origin)
+        for file in file_in_origin:
+            if (file.startswith("odis_female_json") or file.startswith("odis_male_json")):
                 shutil.copy(origin+file, target_directory+'DOWNLOAD_PATH')
         logger.info("Data Loaded to Download path Successfully")
 
         #extracting all the files in landing folder
         for file_name in needed_files:
-            with zipfile.ZipFile(f'{target_directory}/DOWNLOAD_PATH/{file_name}') as f:
-                    # f.extractall()/
-                    f.extractall(f'{target_directory}LANDING/')
+            if (file_name == "odis_female_json.zip") or (file_name == "odis_male_json.zip"):
+              logger.info(f"Started Extraction of file {file_name}")
+              with zipfile.ZipFile(f'{target_directory}/DOWNLOAD_PATH/{file_name}') as f:
+                      # f.extractall()/
+                      f.extractall(f'{target_directory}/LANDING/')
         logger.info("Data Extraction Completed Successfully")
         
     except Exception as e:
         logging.error("Exception occurred", exc_info=True)
 
 origin = 'C:/Users/Admin/Downloads/'
-target_directory = 'C:/Users/Admin/Downloads/procesing/Batch_pipeline_DataEngineering_task/'
+target_directory = os.getcwd()+'/'
+logger.info(f"Your Working Directory is: {target_directory}")
 start_ingesting_data(origin, target_directory)
 
 # %%
@@ -196,19 +198,19 @@ try:
 
         dataframe_new = dataframe_new.withColumn("runs_scored_per_ball", regexp_replace(col("runs_scored_per_ball"), "(\{extras=)|(total=)|(batter=)|(\})", "")).withColumn("EXTRAS_EARNED_PER_BALL", trim(split(col("runs_scored_per_ball"), ',').getItem(0))).withColumn("TOTAL_RUNS_PER_BALL", trim(split(col("runs_scored_per_ball"), ',').getItem(1))).withColumn("BATTER_SCORED_RUNS_PER_BALL", trim(split(col("runs_scored_per_ball"), ',').getItem(2)))
         dataframe_new = dataframe_new.select('overs','FIRST_TEAM', 'SECOND_TEAM','EVENT_NAME','MATCH_DATE','MATCH_CITY','MATCH_NUMBER','GENDER','WINNER_TEAM','WINNED_BY','BATTER','BOWLER','NON_STRIKER','BATTER_SCORED_RUNS_PER_BALL','TOTAL_RUNS_PER_BALL', 'EXTRAS_EARNED_PER_BALL')
-        # dataframe_new.write.parquet("/output_folder/")\
-        # dataframe_new.write.mode("append").format("parquet").save(f"{target_directory}/CLEAN/")
-        dataframe_new = dataframe_new.toPandas()
-        dataframe_new.to_csv(f"{target_directory}/CLEAN/")
-        # dataframe_new.show(10, False)
+        conn = get_connection(logger, target_directory)
+
+        # dataframe_new.write.mode("append").format("parquet").save(f"{target_directory}CLEAN/")
         # dataframe_new = dataframe_new.toPandas()
-        # dataframe_new.to_sql(con = my_conn, name = 'male', if_exists='replace')
+        # dataframe_new.to_csv(f"{target_directory}/CLEAN/")
+        # print(dataframe_new.columns)
+        # dataframe_new.show(10, False)
+        dataframe_new = dataframe_new.toPandas()
+        dataframe_new.to_sql(con = conn, name = 'ODI_CRICKET_RESULT', if_exists='replace')
         # dataframe_new.show(10, Fals
         # result = my_conn.execute(text("select * from male where WINNED_BY NOT like '%runs%'"))
         # print(result.all())
         print(f"{path}/{i}")
-        break
-        # break
 except Exception as e:
   logging.error("Exception occurred", exc_info=True)
    
