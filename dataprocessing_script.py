@@ -205,9 +205,9 @@ try:
         # dataframe_new = dataframe_new.toPandas()
         # dataframe_new.to_csv(f"{target_directory}/CLEAN/")
         # print(dataframe_new.columns)
-        # dataframe_new.show(10, False)
-        dataframe_new = dataframe_new.toPandas()
-        dataframe_new.to_sql(con = conn, name = 'ODI_CRICKET_RESULT', if_exists='replace')
+        dataframe_new.show(10, False)
+        # dataframe_new = dataframe_new.toPandas()
+        # dataframe_new.to_sql(con = conn, name = 'ODI_CRICKET_RESULT', if_exists='replace')
         # dataframe_new.show(10, Fals
         # result = my_conn.execute(text("select * from male where WINNED_BY NOT like '%runs%'"))
         # print(result.all())

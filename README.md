@@ -31,3 +31,9 @@ Scripts Name:
 --dataprocessing_scripts.py- This Script hold all the necessary components from Ingestion to load of data in the clean file.
 --data_ingestion_script.py - This script is used to Download the data from Cricksheet.org site, using selenium webdriver. 
 --database_script.py - This Script will load the data to a database cricket.db, inside table - ODI_CRICKET_RESULT
+
+[RUN Order Of Scripts]
+1) __main__.py
+2)--dataprocessing_scripts.py - 
+
+[Running all the Script]
