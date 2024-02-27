@@ -254,10 +254,10 @@ try:
         #to store your tables in parquet format in the project directory within CLEAN folder.
         # dataframe_new.write.mode("append").format("parquet").save(f"{target_directory}CLEAN/")
  
-        dataframe_new.show(10, False)
+        dataframe_new.show(2, False)
         #to load data to sqlite databse
-        # dataframe_new = dataframe_new.toPandas()
-        # dataframe_new.to_sql(con = conn, name = 'ODI_CRICKET_RESULT', if_exists='replace')
+        dataframe_new = dataframe_new.toPandas()
+        dataframe_new.to_sql(con = conn, name = 'ODI_CRICKET_RESULT', if_exists='replace')
         print(f"{path}/{i}")
 except Exception as e:
   logging.error("Exception occurred", exc_info=True)
