@@ -4,15 +4,15 @@ from sqlalchemy.exc import SQLAlchemyError
 
 
 def get_connection(logger, path_of_database):
-    """
-        This Python-function is used to create cricket.db database inside the DATABASE path of project directory, 
-        if  ODI_CRICKET_RESULT is not present in the cricket.db database then, it will create ODI_CRICKET_RESULT table, and will return the connection.
-        arguments :
-        logger - This is the logger object, used to log info.
-        path_of_database[Data-Type - python-string] - This contains the path of the project_directory to created a "cricket.db". 
-        return : 
-            my_conn - This contains the connection obj of the sqlite databse. 
-    """
+    ######################################################################################################################################################
+    # This Python-function is used to create cricket.db database inside the DATABASE path of project directory, 
+    # if  ODI_CRICKET_RESULT is not present in the cricket.db database then, it will create ODI_CRICKET_RESULT table, and will return the connection.
+    # arguments :
+    # logger - This is the logger object, used to log info.
+    # path_of_database[Data-Type - python-string] - This contains the path of the project_directory to created a "cricket.db". 
+    # return : 
+    #     my_conn - This contains the connection obj of the sqlite databse. 
+    ####################################################################################################################################################
     path = (f"sqlite:///{path_of_database}DATABASE/cricket.db")
     print(path)
     my_conn = create_engine(path)

@@ -24,15 +24,15 @@ spark = SparkSession.builder.getOrCreate()
 
 
 def start_ingesting_data(origin, target_directory):
-    """"
-    This function is used to Ingest data directly from the cricksheet.org site using selenium webdriver,
-    also to move the file from downloaded path to the project folder DOWNLOAD_PATH,
-    for this create required directories and finally extract data to the Landing Folder.
-    arguments :
-        origin[Data-Type - String] - Original_path where file is getting downloaded local directory Ideal- "C:\Users\Admin\Downloads" 
-        target_directory[Data-Type - String]- This is the path of DOWNLOADED_PATH inside the project directory, where these downloaded files will be moved.
-    return : Nothing
-    """
+    #########################################################################################################################################################
+    # This function is used to Ingest data directly from the cricksheet.org site using selenium webdriver,
+    # also to move the file from downloaded path to the project folder DOWNLOAD_PATH,
+    # for this create required directories and finally extract data to the Landing Folder.
+    # arguments :
+    #     origin[Data-Type - String] - Original_path where file is getting downloaded local directory Ideal- "C:\Users\Admin\Downloads" 
+    #     target_directory[Data-Type - String]- This is the path of DOWNLOADED_PATH inside the project directory, where these downloaded files will be moved.
+    # return : Nothing
+    ###########################################################################################################################################################
     try:
         # Data Ingestion  to correct path
         origin = origin
@@ -87,14 +87,14 @@ start_ingesting_data(origin, target_directory)
 # %%
 #Necessay Function
 def get_batter_bowler_striker(column, column_need):
-  """"
-  This Pyspark-UDF is used to extract the information of batter, bowler, non-striker ball-by-ball, 
-  arguments :
-      column[Data-Type - dictionary] - This is used to get the dictionary per ball to extract the name of batter, bowler, non-striker.
-      column_need[Data-Type - String]- This is used to get the exact key-name to extract, ex: if column_need = "batter" extract only batter name.
-  return : 
-    Value [Data-Type - pyspark-StringType()] - This gives the name of the batter or baller or non-striker. 
-    """
+  #########################################################################################################################################################
+  # This Pyspark-UDF is used to extract the information of batter, bowler, non-striker ball-by-ball, 
+  # arguments :
+  #     column[Data-Type - dictionary] - This is used to get the dictionary per ball to extract the name of batter, bowler, non-striker.
+  #     column_need[Data-Type - String]- This is used to get the exact key-name to extract, ex: if column_need = "batter" extract only batter name.
+  # return : 
+  #   Value [Data-Type - pyspark-StringType()] - This gives the name of the batter or baller or non-striker. 
+  #########################################################################################################################################################
   try:
     if column_need.strip() == 'batter':
       return column['batter']
@@ -111,13 +111,13 @@ def get_batter_bowler_striker(column, column_need):
 
 #Necessay Function
 def get_run_ball_by_ball(column):
-  """"
-  This Pyspark-UDF is used to extract the information of runs scored ball-by-ball, 
-  arguments :
-      column[Data-Type - dictionary] - This is used to get the dictionary per ball to extract the runs scored per ball.
-  return : 
-    Value [Data-Type - pysaprk-String] - This gives the runs scored per ball. 
-  """
+  #########################################################################################################################################################
+  # This Pyspark-UDF is used to extract the information of runs scored ball-by-ball, 
+  # arguments :
+  #     column[Data-Type - dictionary] - This is used to get the dictionary per ball to extract the runs scored per ball.
+  # return : 
+  #   Value [Data-Type - pysaprk-String] - This gives the runs scored per ball. 
+  #########################################################################################################################################################
   try:
     runs_list = [-1]*3
     for scores in column.keys():
@@ -129,14 +129,14 @@ def get_run_ball_by_ball(column):
 
 
 def get_info_and_meta_data(all_information):
-  """"
-  This Pyspark-UDF is used to extract the information of runs scored ball-by-ball, 
-  arguments :
-      all_information[Data-Type - dictionary] - This is used to get the dictionary of the whole match.
-  return : 
-    meta_information[Data-Type - dictionary] - This gives the information of the meta data of the json.
-    info_information[Data-Type - dictionary] - This gives the information of the info data from the json.
-  """
+  #########################################################################################################################################################
+  # This Pyspark-UDF is used to extract the information of runs scored ball-by-ball, 
+  # arguments :
+  #     all_information[Data-Type - dictionary] - This is used to get the dictionary of the whole match.
+  # return : 
+  #   meta_information[Data-Type - dictionary] - This gives the information of the meta data of the json.
+  #   info_information[Data-Type - dictionary] - This gives the information of the info data from the json.
+  #########################################################################################################################################################
   try:
       for data in all_information.keys():
         if data == 'meta':
@@ -148,21 +148,21 @@ def get_info_and_meta_data(all_information):
     logging.error("Exception occurred", exc_info=True)
 
 def get_necessary_information(data):
-  """"
-  This Python-function is used to extract the necessary details from the info-json, ex: date, city, even_name, match_number, gender, winner, winned_by, team_1, team_2 
-  arguments :
-      data[Data-Type - dictionary] - This contains the info dictionary.
-  return : 
-    date[Data-Type - python-string] - This gives the date on which match was help.
-    city[Data-Type - python-string] - This gives the information of the city in which this match was played.
-    event[Data-Type - python-string] - This gives the match name.
-    match_number[Data-Type - python-string] - This gives the match_number.
-    gender[Data-Type - python-string] - This gives the gender.
-    winner[Data-Type - python-string] - This gives the information about the winning_team
-    winned_by[Data-Type - python-string] - This gives information about the scores, ex: winning team is won by "94 runs", "7 wickets" etc.
-    team_1[Data-Type - python-string] - This gives information about the Team_1 playing. 
-    team_2[Data-Type - python-string] - This gives information about the Team_2 playing. 
-  """
+  #########################################################################################################################################################
+  # This Python-function is used to extract the necessary details from the info-json, ex: date, city, even_name, match_number, gender, winner, winned_by, team_1, team_2 
+  # arguments :
+  #     data[Data-Type - dictionary] - This contains the info dictionary.
+  # return : 
+  #   date[Data-Type - python-string] - This gives the date on which match was help.
+  #   city[Data-Type - python-string] - This gives the information of the city in which this match was played.
+  #   event[Data-Type - python-string] - This gives the match name.
+  #   match_number[Data-Type - python-string] - This gives the match_number.
+  #   gender[Data-Type - python-string] - This gives the gender.
+  #   winner[Data-Type - python-string] - This gives the information about the winning_team
+  #   winned_by[Data-Type - python-string] - This gives information about the scores, ex: winning team is won by "94 runs", "7 wickets" etc.
+  #   team_1[Data-Type - python-string] - This gives information about the Team_1 playing. 
+  #   team_2[Data-Type - python-string] - This gives information about the Team_2 playing. 
+  #########################################################################################################################################################
   try:
       date = data['dates'][0]
 
@@ -208,14 +208,14 @@ get_run_ball_by_ball_udf =  udf(lambda column: get_run_ball_by_ball(column), Str
 get_batter_bowler_striker_udf =  udf(lambda column, column_need: get_batter_bowler_striker(column, column_need), StringType())
 
 # %%
-""""
-This Block is basically will start the Data Extractiona dn storing it in sql databse.
-"""
+#########################################################################################################################################################
+# This Block is basically will start the Data Extractiona dn storing it in sql databse.                                                                 #
+#########################################################################################################################################################
 try:
   path = target_directory+'LANDING/'
   all_the_files = os.listdir(path)
   # print(all_the_files)
-  conn = get_connection(logger, target_directory)
+  # 
   necessary_columns = []
   for i in all_the_files:
     # print(f"/female_dataset/{i}")
@@ -249,7 +249,7 @@ try:
 
         dataframe_new = dataframe_new.withColumn("runs_scored_per_ball", regexp_replace(col("runs_scored_per_ball"), "(\{extras=)|(total=)|(batter=)|(\})", "")).withColumn("EXTRAS_EARNED_PER_BALL", trim(split(col("runs_scored_per_ball"), ',').getItem(0))).withColumn("TOTAL_RUNS_PER_BALL", trim(split(col("runs_scored_per_ball"), ',').getItem(1))).withColumn("BATTER_SCORED_RUNS_PER_BALL", trim(split(col("runs_scored_per_ball"), ',').getItem(2)))
         dataframe_new = dataframe_new.select('overs','FIRST_TEAM', 'SECOND_TEAM','EVENT_NAME','MATCH_DATE','MATCH_CITY','MATCH_NUMBER','GENDER','WINNER_TEAM','WINNED_BY','BATTER','BOWLER','NON_STRIKER','BATTER_SCORED_RUNS_PER_BALL','TOTAL_RUNS_PER_BALL', 'EXTRAS_EARNED_PER_BALL')
-        
+        # conn = get_connection(logger, target_directory)
 
         #to store your tables in parquet format in the project directory within CLEAN folder.
         # dataframe_new.write.mode("append").format("parquet").save(f"{target_directory}CLEAN/")

@@ -9,14 +9,16 @@ from selenium.webdriver.chrome.options import Options
 
 
 def download_required_files(logger):
-    """
-        This Python-function is used to create download the male.json and femal.json file from the cricsheet.org site. 
-        This function is using selenium chrome-webdriver to download the zip file in the download folder "C:\Users\Admin\Downloads".
-        arguments :
-        logger - This is the logger object, used to log info.
-        return : 
-            Nothing
-    """
+
+    ########################################################################################################################        
+    # This Python-function is used to create download the male.json and femal.json file from the cricsheet.org site. 
+    # This function is using selenium chrome-webdriver to download the zip file in the download folder "C:\Users\Admin\Downloads".
+    # arguments :
+    #     logger - This is the logger object, used to log info.
+    # return : 
+    #     Nothing
+    #########################################################################################################################
+    
     chromeOptions= webdriver.ChromeOptions()
     chromeOptions.add_experimental_option("detach", True)
     driver = webdriver.Chrome(options = chromeOptions,service=Service(ChromeDriverManager().install()))
