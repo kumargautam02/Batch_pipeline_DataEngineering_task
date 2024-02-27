@@ -33,5 +33,4 @@ def download_required_files(logger):
     download_female_dataset.click()
     driver.implicitly_wait(120)
     logger.info("Download of Female_Dataset Started")
-    driver.close()
     return 

@@ -11,4 +11,3 @@
 <h4>
 [Question 2] - Sorry I was not able to perform these queries because, I was having some configuration issues with spark in my local system, i was not able to see any output or couldn't be able to convert any thing to pandas also. I will try to solve this issue and will update this answer.md file. 
 </h4>
-
