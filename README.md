@@ -52,3 +52,10 @@ table_name: ODI_CRICKET_RESULT
 <li>__main__.py - This will Trigger the dataprocessing_script.py</li>
 <li>dataprocessing_scripts.py - This will trigger the data_ingestion_script.py, database_script.pt</li>
 
+<h2>
+[Comments]
+</h2>
+
+![alt text](image.png)
+In the dataprocessing_script.py, I have kept spark.save method if you want to save files locally. 
+

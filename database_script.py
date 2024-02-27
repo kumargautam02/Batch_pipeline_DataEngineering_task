@@ -1,3 +1,4 @@
+import re
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
@@ -14,6 +15,7 @@ def get_connection(logger, path_of_database):
     #     my_conn - This contains the connection obj of the sqlite databse. 
     ####################################################################################################################################################
     path = (f"sqlite:///{path_of_database}DATABASE/cricket.db")
+    path = re.sub(r"(\\)", "/", path)
     print(path)
     my_conn = create_engine(path)
     my_conn = my_conn.connect()

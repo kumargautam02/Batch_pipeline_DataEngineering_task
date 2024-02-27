@@ -1,4 +1,5 @@
 # %%
+import re
 import os
 import shutil
 import json
@@ -58,6 +59,8 @@ def start_ingesting_data(origin, target_directory):
             logger.info("DOWNLOAD_PATH created created successfully")
             os.makedirs(f'{target_directory}DATABASE')
             logger.info("DATABASE created created successfully")
+            os.makedirs(f'{target_directory}CLEAN')
+            logger.info("CLEAN Path created successfully")
 
         files_in_target_directory = os.listdir(target_directory+'DOWNLOAD_PATH')
         needed_files = ['odis_female_json.zip', "odis_male_json.zip"]
@@ -215,7 +218,7 @@ try:
   path = target_directory+'LANDING/'
   all_the_files = os.listdir(path)
   # print(all_the_files)
-  # 
+  # conn = get_connection(logger, target_directory)
   necessary_columns = []
   for i in all_the_files:
     # print(f"/female_dataset/{i}")
@@ -249,16 +252,17 @@ try:
 
         dataframe_new = dataframe_new.withColumn("runs_scored_per_ball", regexp_replace(col("runs_scored_per_ball"), "(\{extras=)|(total=)|(batter=)|(\})", "")).withColumn("EXTRAS_EARNED_PER_BALL", trim(split(col("runs_scored_per_ball"), ',').getItem(0))).withColumn("TOTAL_RUNS_PER_BALL", trim(split(col("runs_scored_per_ball"), ',').getItem(1))).withColumn("BATTER_SCORED_RUNS_PER_BALL", trim(split(col("runs_scored_per_ball"), ',').getItem(2)))
         dataframe_new = dataframe_new.select('overs','FIRST_TEAM', 'SECOND_TEAM','EVENT_NAME','MATCH_DATE','MATCH_CITY','MATCH_NUMBER','GENDER','WINNER_TEAM','WINNED_BY','BATTER','BOWLER','NON_STRIKER','BATTER_SCORED_RUNS_PER_BALL','TOTAL_RUNS_PER_BALL', 'EXTRAS_EARNED_PER_BALL')
-        # conn = get_connection(logger, target_directory)
+        conn = get_connection(logger, target_directory)
 
         #to store your tables in parquet format in the project directory within CLEAN folder.
         # dataframe_new.write.mode("append").format("parquet").save(f"{target_directory}CLEAN/")
- 
-        dataframe_new.show(2, False)
+
         #to load data to sqlite databse
         dataframe_new = dataframe_new.toPandas()
-        dataframe_new.to_sql(con = conn, name = 'ODI_CRICKET_RESULT', if_exists='replace')
+        dataframe_new.to_sql(con = my_conn, name = 'ODI_CRICKET_RESULT', if_exists='append')
+        my_conn.close()
         print(f"{path}/{i}")
+        # break
 except Exception as e:
   logging.error("Exception occurred", exc_info=True)
    
